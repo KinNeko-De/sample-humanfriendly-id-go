@@ -25,12 +25,21 @@ func ParseHumanFriendlyId(userInput string) (HumanFriendlyId, error) {
 
 func NewHumanFriendlyId(length int) (HumanFriendlyId, error) {
 	idChars := make([]byte, length)
-	displayLength := length + (length-1)/4
-	displayIdChars := make([]byte, displayLength)
 	_, err := rand.Read(idChars)
 	if err != nil {
 		return HumanFriendlyId{}, err
 	}
+	displayIdChars := createDisplayIdChars(length, idChars)
+
+	return HumanFriendlyId{
+		Id:        string(idChars),
+		DisplayId: string(displayIdChars),
+	}, nil
+}
+
+func createDisplayIdChars(length int, idChars []byte) []byte {
+	displayLength := length + (length-1)/4
+	displayIdChars := make([]byte, displayLength)
 	d := 0
 	for k, v := range idChars {
 		if k != 0 && k%4 == 0 {
@@ -41,13 +50,5 @@ func NewHumanFriendlyId(length int) (HumanFriendlyId, error) {
 		displayIdChars[d] = idChars[k]
 		d++
 	}
-
-	return HumanFriendlyId{
-		Id:        string(idChars),
-		DisplayId: string(displayIdChars),
-	}, nil
-}
-
-func ToDisplayId(s string) {
-
+	return displayIdChars
 }
