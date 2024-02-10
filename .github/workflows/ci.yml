@@ -82,13 +82,6 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-      - name: "Build artifacts"
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./build/dockerfile
-          push: false
-          tags: ${{ steps.semantic_version.outputs.semantic_version }} # on push later
       - name: Create semantic versioning git tag for golang
         uses: actions/github-script@v6
         with:
