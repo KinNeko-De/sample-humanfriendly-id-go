@@ -11,10 +11,27 @@ import (
 
 const allowedChars = "ABCDEFGHJKLMNPQRSTUVWXYZ123456789"
 
-func TestNewHumanFriendlyId(t *testing.T) {
+func TestNewHumanFriendlyId_Id_IsGenerated(t *testing.T) {
 	tests := []struct {
-		length           int
-		expectedIdLength int
+		length int
+	}{
+		{1},
+		{16},
+	}
+
+	for _, test := range tests {
+		id, err := NewHumanFriendlyId(test.length)
+
+		assert.Nil(t, err)
+		assert.Equal(t, test.length, len(id.Id))
+		assert.Regexp(t, regexp.MustCompile("^["+allowedChars+"]*$"), id.Id)
+	}
+}
+
+func TestNewHumanFriendlyId_DisplayId_IsGroupedBySpaces(t *testing.T) {
+	tests := []struct {
+		length                  int
+		expectedDisplayIdLength int
 	}{
 		{1, 1},
 		{4, 4},
@@ -29,8 +46,6 @@ func TestNewHumanFriendlyId(t *testing.T) {
 		id, err := NewHumanFriendlyId(test.length)
 
 		assert.Nil(t, err)
-		assert.Equal(t, test.length, len(id.Id))
-		assert.Regexp(t, regexp.MustCompile("^["+allowedChars+"]*$"), id.Id)
 		assert.Regexp(t, regexp.MustCompile(createRegex(test.length)), id.DisplayId)
 	}
 }
@@ -61,4 +76,25 @@ func createRegex(length int) string {
 	regex.WriteString(lastRegex + "$")
 
 	return regex.String()
+}
+
+func TestParseHumanFriendlyId_Id_IsNormalized(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{"ABCDEFGHJKLM", "ABCDEFGHJKLM"},
+		{"abcdefghjklm", "ABCDEFGHJKLM"},
+		{"I", "1"},
+		{"i", "1"},
+		{"ABCD EFGH JKLM", "ABCDEFGHJKLM"},
+	}
+
+	for _, test := range tests {
+		id, err := ParseHumanFriendlyId(test.input)
+
+		assert.Nil(t, err)
+		assert.Equal(t, test.expected, id.Id)
+	}
+
 }

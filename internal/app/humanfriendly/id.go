@@ -16,7 +16,7 @@ type HumanFriendlyId struct {
 }
 
 func ParseHumanFriendlyId(userInput string) (HumanFriendlyId, error) {
-	normalizedId := strings.ToUpper(strings.ReplaceAll(strings.ReplaceAll(userInput, " ", ""), "I", "1"))
+	normalizedId := strings.ReplaceAll(strings.ReplaceAll(strings.ToUpper(userInput), " ", ""), "I", "1")
 	return HumanFriendlyId{
 		Id:        normalizedId,
 		DisplayId: userInput,
