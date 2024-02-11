@@ -1,4 +1,4 @@
-module githubgithub.com/kinneko-de/sample-humanfriendly-id-go
+module github.com/kinneko-de/sample-humanfriendly-id-go
 
 go 1.21.6
 
