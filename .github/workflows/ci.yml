@@ -24,7 +24,7 @@ jobs:
       - name: Install go
         uses: actions/setup-go@v5
         with:
-          go-version: '^1.21.0'
+          go-version: '^1.21.6'
       - name: "Installed go version"
         run: go version
       - uses: actions/checkout@v4
@@ -83,7 +83,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
       - name: Create semantic versioning git tag for golang
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             github.rest.git.createRef({
